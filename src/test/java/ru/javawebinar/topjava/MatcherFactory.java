@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava;
 
+import ru.javawebinar.topjava.model.Meal;
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,4 +34,6 @@ public class MatcherFactory<T> {
     public void assertMatch(Iterable<T> actual, Iterable<T> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
     }
+
+
 }

@@ -2,6 +2,8 @@ package ru.javawebinar.topjava.web;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.util.StringUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.web.meal.MealRestController;
@@ -27,7 +29,13 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init() {
-        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
+
+      //  System.setProperty("spring.profiles.active", "postgres,datajpa");
+        ConfigurableEnvironment env = new StandardEnvironment();
+        env.setActiveProfiles("postgres","datajpa");
+        springContext = new ClassPathXmlApplicationContext(new String[]{"spring/spring-app.xml", "spring/spring-db.xml"}, false);
+        springContext.setEnvironment(env);
+        springContext.refresh();
         mealController = springContext.getBean(MealRestController.class);
     }
 
@@ -56,7 +64,9 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-
+        for (String values : springContext.getEnvironment().getActiveProfiles()){
+            System.out.println(values);
+        }
         switch (action == null ? "all" : action) {
             case "delete" -> {
                 int id = getId(request);
