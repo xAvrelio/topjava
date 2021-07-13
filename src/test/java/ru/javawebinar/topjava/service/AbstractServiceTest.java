@@ -16,6 +16,8 @@ import ru.javawebinar.topjava.TimingRules;
 
 import javax.annotation.Resource;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 
@@ -31,20 +33,8 @@ public abstract class AbstractServiceTest {
     @ClassRule
     public static ExternalResource summary = TimingRules.SUMMARY;
 
-    @Resource
-    public ApplicationContext context;
-
     @Rule
     public Stopwatch stopwatch = TimingRules.STOPWATCH;
-
-    public boolean isJdbc() {
-        for(String profile : context.getEnvironment().getActiveProfiles()){
-            if ("JDBC".equalsIgnoreCase(profile)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     //  Check root cause in JUnit: https://github.com/junit-team/junit4/pull/778
     protected <T extends Throwable> void validateRootCause(Class<T> rootExceptionClass, Runnable runnable) {
